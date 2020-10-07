@@ -18,151 +18,175 @@
     please also attach this illustration for people ( see: ampm.jpg )
 */
 
-function convertTime(time) {
-
-    let result = '';
-    let hours = time.slice(0, 2);
-    let minutes = time.slice(3, 5);
-    const period = time.slice(-2);
-  
-    switch (period) {
-      case 'AM':
-        hours === '12' ? (hours = '00') : null;
-        result = `${hours}:${minutes}`;
-        break;
-  
-      case 'PM':
-        hours[0] === '0' ? (hours = hours[1]) : null;
-        hours === '12' ? null : (hours = (parseInt(hours) + 12).toString());
-        result = `${hours}:${minutes}`;
-        break;
+const convertTime = (time)=> {
+    let [,h,m,a] = time.toLowerCase().match(/([0-9]+):([0-9]+) ([ap]m)/);
+    h = Number(h);
+    m = Number(m);
+    if ( a == 'am' ){
+        if ( h == 12 ) h = 0; 
+    } else {
+        if ( h != 12 ) h += 12;
     }
-  
-  }
-  
-  convertTime("12:00 AM");
-  convertTime("12:01 AM");
-  convertTime("12:01 PM");
-  convertTime("09:00 PM");
-  
-  /* Micha */
-  
-  const shittyAPI = [
+    console.log(`${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`)
+}
+
+convertTime("12:00 AM");
+convertTime("12:01 AM");
+convertTime("12:01 PM");
+convertTime("09:00 PM");
+
+
+
+
+
+
+
+
+
+/* Micha */
+
+const shittyAPI = [
     { Oh: ["d", ["F", ["u", ["M", ["o", ["Q", ["q", ["B", ["n", ["h", ["p", ["D", ["U"]]]]]]]]]]]]] },
     { My: ["a", ["t", ["X", ["i", ["r", ["w", ["j", ["W", ["g", ["V", ["J", ["T", ["R"]]]]]]]]]]]]] },
     { God: ["L", ["Y", ["s", ["Z", ["y", ["C", ["N", ["I", ["f", ["P", ["c", ["O", ["l"]]]]]]]]]]]]] },
     { WTF: ["v", ["A", ["b", ["e", ["m", ["x", ["S", ["K", ["E", ["G", ["H", ["z", ["k"]]]]]]]]]]]]] }
-  ]
-  
-  // The string-values are just all 26 letters in upper- and lowercases. Shuffled. No dublicates.
-  
-  // 1. Convert this array into two strings which will contain lowercase alphabet (1st string)
-  //      and uppercase alphabet (2nd string):
-  
-  //              resultString1 === a b c d e f g h i j k l m n o p q r s t u v w x y z
-  //              resultString2 === A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-  
-  
-  // 2. Convert this array into one result-array which will contain 26 arrays,
-  //      each one with two strings — same letter in lower- and uppercase:
-  
-  //              resultArray === [ ["a", "A"],
-  //                                ["b", "B"],
-  //                                ["c", "C"],
-  //                                ["d", "D"],
-  //                                ["e", "E"],
-  //                                ["f", "F"],
-  //                                ["g", "G"],
-  //                                ["h", "H"],
-  //                                ["i", "I"],
-  //                                ["j", "J"],
-  //                                ["k", "K"],
-  //                                ["l", "L"],
-  //                                ["m", "M"],
-  //                                ["n", "N"],
-  //                                ["o", "O"],
-  //                                ["p", "P"],
-  //                                ["q", "Q"],
-  //                                ["r", "R"],
-  //                                ["s", "S"],
-  //                                ["t", "T"],
-  //                                ["u", "U"],
-  //                                ["v", "V"],
-  //                                ["w", "W"],
-  //                                ["x", "X"],
-  //                                ["y", "Y"],
-  //                                ["z", "Z"] ]
-  
-  // Solution:
-  const allLettersArray = shittyAPI.map(object => Object.values(object)).flat(Infinity);
-  
-  const string1 = allLettersArray.sort().slice(26).join(" ");
-  const string2 = allLettersArray.sort().slice(0, 26).join(" ");
-  
-  let cutArray = allLettersArray.sort((a, b) => a.localeCompare(b));
-  let resultArray = [];
-  
-  while (cutArray.length > 0) {
-    const cutElements = cutArray.splice(0, 2);
-    resultArray.push(cutElements);
-  }
-  
-  console.log(string1);
-  console.log(string2);
-  console.log(resultArray);
-  
-  /* Nisha
-      Create a function that takes two numbers and a mathematical operator [+ - / *]
-      and will perform a calculation with the given numbers.
-      For example (3, "+", 2) =5  , (3,"/",3) =1
-  
-      If the number1 tries to divide by 0, return: "Can't divide by 0!"
-  */
-  
-  function calculator(number1, operator, number2) {
-    switch (operator) {
-      case "+": return number1 + number2;
-      case "-": return number1 - number2;
-      case "*": return number1 * number2;
-      case "/":
-        if (number2 == 0) return "Can't divide by 0!"
-        return number1 / number2;
+]
+
+// The string-values are just all 26 letters in upper- and lowercases. Shuffled. No dublicates.
+
+// 1. Convert this array into two strings which will contain lowercase alphabet (1st string)
+//      and uppercase alphabet (2nd string):
+
+//              resultString1 === a b c d e f g h i j k l m n o p q r s t u v w x y z
+//              resultString2 === A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+
+const resultString1 = shittyAPI
+.map( o => Object.values(o) )
+.flat(Infinity)
+.sort()
+.filter( letter => letter.match(/[a-z]/) )
+.join(' ')
+
+const resultString2 = shittyAPI
+.map( o => Object.values(o) )
+.flat(Infinity)
+.sort()
+.filter( letter => letter.match(/[A-Z]/) )
+.join(' ')
+
+console.log(resultString1)
+console.log(resultString2)
+
+// 2. Convert this array into one result-array which will contain 26 arrays,
+//      each one with two strings — same letter in lower- and uppercase:
+
+//              resultArray === [ ["a", "A"],
+//                                ["b", "B"],
+//                                ["c", "C"],
+//                                ["d", "D"],
+//                                ["e", "E"],
+//                                ["f", "F"],
+//                                ["g", "G"],
+//                                ["h", "H"],
+//                                ["i", "I"],
+//                                ["j", "J"],
+//                                ["k", "K"],
+//                                ["l", "L"],
+//                                ["m", "M"],
+//                                ["n", "N"],
+//                                ["o", "O"],
+//                                ["p", "P"],
+//                                ["q", "Q"],
+//                                ["r", "R"],
+//                                ["s", "S"],
+//                                ["t", "T"],
+//                                ["u", "U"],
+//                                ["v", "V"],
+//                                ["w", "W"],
+//                                ["x", "X"],
+//                                ["y", "Y"],
+//                                ["z", "Z"] ]
+
+const shittyAPI = [
+    { Oh: ["d", ["F", ["u", ["M", ["o", ["Q", ["q", ["B", ["n", ["h", ["p", ["D", ["U"]]]]]]]]]]]]] },
+    { My: ["a", ["t", ["X", ["i", ["r", ["w", ["j", ["W", ["g", ["V", ["J", ["T", ["R"]]]]]]]]]]]]] },
+    { God: ["L", ["Y", ["s", ["Z", ["y", ["C", ["N", ["I", ["f", ["P", ["c", ["O", ["l"]]]]]]]]]]]]] },
+    { WTF: ["v", ["A", ["b", ["e", ["m", ["x", ["S", ["K", ["E", ["G", ["H", ["z", ["k"]]]]]]]]]]]]] }
+]
+
+const notPairs = shittyAPI
+.map( o => Object.values(o) )
+.flat(Infinity)
+.sort( (a,b)=> {
+    const la = a.toLowerCase();
+    const lb = b.toLowerCase();
+    if ( la == lb ) return a.localeCompare(b);
+    else return la.localeCompare(lb);
+});
+
+const pairs = [];
+
+for ( let i = 0; i < notPairs.length; i+=2 ){
+    pairs.push([notPairs[i],notPairs[i+1]]);
+}
+
+console.log( pairs );
+
+
+
+/* Nisha
+    Create a function that takes two numbers and a mathematical operator [+ - / *]
+    and will perform a calculation with the given numbers.
+    For example (3, "+", 2) =5  , (3,"/",3) =1
+
+    If the number1 tries to divide by 0, return: "Can't divide by 0!"
+*/
+
+const calculator = (n1,op,n2) => {
+    switch(op){
+        case "+": return n1 + n2;
+        case "-": return n1 - n2;
+        case "*": return n1 * n2;
+        case "/": return n2 == 0 ? "Can't divide by 0!" : n1 / n2;
     }
-  }
-  
-  /*
-      Daniel
-      Please create a function that loops through the 3D Array and returns the Sum
-  */
-  
-  let arr3D = [[[1, 2, 3]], [[7, 10, 3]], [[9, 10, 8]]];
-  
-  function Sumo() {
-    let sum = 0;
-    for (let i = 0; i < arr3D.length; i++) {
-      arr3D[i].forEach(element => {
-        for (let j = 0; j < element.length; j++) {
-          sum += element[j]
-        }
-      })
-    }
-    return sum
-  }
-  
-  console.log(Sumo())
-  
-  
-  
-  
-  
-  
-  
-  
-  /*
-      Create a simple webpage out of the data below
-  */
-  
-  const DATA = [
+}
+
+console.log( calculator(1,"+",1) );
+console.log( calculator(1,"/",0) );
+
+
+
+
+
+
+/*
+    Daniel
+    Please create a function that loops through the 3D Array and returns the Sum
+*/
+
+let arr3D = [[[1, 2, 3]], [[7, 10, 3]], [[9, 10, 8]]];
+
+const functionThatLoopsThoughThe3DArrayAndReturnsTheSum = (arr3D)=>
+    arr3D.flat(Infinity).reduce( (c,v)=> c + v )
+
+console.log(functionThatLoopsThoughThe3DArrayAndReturnsTheSum(arr3D));
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+    Create a simple webpage out of the data below
+*/
+
+const DATA = [
     {
       category: 'finance',
       datetime: 1601984978,
@@ -459,55 +483,55 @@ function convertTime(time) {
       url:
         'https://www.cnbc.com/2020/10/05/presidential-election-and-markets-key-levels-for-sp-500-and-stocks-.html',
     },
-  ];
-  
-  
-  
-  
-  
-  
-  // Sami
-  
-  function reverseString(str) {
-    let stringRev = "";
-    for (let i = str.length; i >= 0; i--) {
-      stringRev = stringRev + str.charAt(i);
-    }
-    return stringRev;
-  }
-  
-  alert(reverseString("Pradeep"));
-  
-  // How to check if object is empty or not in javaScript?
-  
-  function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
-  }
-  
-  // How to remove array element based on object property?
-  var myArray = [
+];
+
+
+
+
+
+
+
+
+
+
+// Sami
+
+// Write a fruntion to reverse a string
+
+const reverseString = (str)=> str.split('').reverse().join('')
+
+console.log(reverseString("Pradeep"));
+
+// How to check if object is empty or not in javaScript?
+
+const isEmpty = (o)=> Object.keys(o).length == 0
+
+console.log( isEmpty({}) )
+console.log( isEmpty({asd:123}) )
+
+// How to remove array element based on object property?
+var myArray = [
     { field: "id", operator: "eq" },
     { field: "cStatus", operator: "eq" },
     { field: "money", operator: "eq" },
-  ];
-  
-  myArray = myArray.filter(function (obj) {
-    return obj.field !== "money";
-  });
-  
-  Console.log(myArray);
-  // Should print
-  // myArray = [
-  //     {field: "id", operator: "eq"}
-  //     {field: "cStatus", operator: "eq"}
-  // ]
-  
-  
-  
-  
-  // Q. What would be the output of following code?
-  
-  function Person(name, age) {
+];
+
+myArray = myArray.filter( o => o.field != "money" )
+
+console.log(myArray);
+
+// Should print
+// myArray = [
+//     {field: "id", operator: "eq"}
+//     {field: "cStatus", operator: "eq"}
+// ]
+
+
+
+
+// Q. What would be the output of following code?
+
+function Person(name, age) {
     this.name = "John";
     this.age = 24;
     this.displayName = function () {
@@ -551,20 +575,17 @@ function convertTime(time) {
   
   function Employee() {
     this.employeeId = "bq1uy";
-  }
-  
-  console.log(new Employee().employeeId);
-  
-  Employee.prototype.employeeId = "kj182";
-  Employee.prototype.JobId = "1BJKSJ";
-  
-  console.log(new Employee().JobId);
-  console.log(new Employee().employeeId);
-  
-  // 1) bq1uy 1BJKSJ bq1uy undefined
-  // 2) bq1uy 1BJKSJ bq1uy
-  // 3) bq1uy 1BJKSJ kj182
-  // 4) undefined 1BJKSJ kj182
-  
-  // Answer: 2) bq1uy 1BJKSJ bq1uy
-  
+}
+
+console.log(new Employee().employeeId);
+
+Employee.prototype.employeeId = "kj182";
+Employee.prototype.JobId = "1BJKSJ";
+
+console.log(new Employee().JobId);
+console.log(new Employee().employeeId);
+
+// 1) bq1uy 1BJKSJ bq1uy undefined
+// 2) bq1uy 1BJKSJ bq1uy
+// 3) bq1uy 1BJKSJ kj182
+// 4) undefined 1BJKSJ kj182
